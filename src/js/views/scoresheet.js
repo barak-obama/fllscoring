@@ -267,17 +267,19 @@ define('views/scoresheet',[
                 scoreEntry.published = $settings.settings.autoPublish || false;
                 scoreEntry.calcFilename();
 
+                let message = `Team: ${scoreEntry.team.name}  (#${scoresheet.team.number})\n` +
+                    `Score: ${scoreEntry.score}\n` +
+                    `Stage: ${scoresheet.stage.name}, Round ${scoresheet.round}\n\n` +
+                    `Thank you!`;
+
                 return $scores.create(scoresheet, scoreEntry).then(function() {
                     log('result saved: ');
-                    message = `Thanks for submitting a score of ${scoreEntry.score} points for team (${scoresheet.team.number})` +
-                        ` ${scoresheet.team.name} in ${scoresheet.stage.name} ${scoresheet.round}.`;
                     $scope.clear();
                     setTimeout(() => $window.alert(message), 0);
                 }).catch(function(err) {
                     log(`Error: ${err}`);
-                    message = `Thanks for submitting a score of ${scoreEntry.score} points for team` +
-                        ` ${scoresheet.team.name} (${scoresheet.team.number}) in ${scoresheet.stage.name} ${scoresheet.round}.` + `
-Notice: the score could not be sent to the server. ` +
+                    message = message +
+                        `\n\nNotice: the score could not be sent to the server. ` +
                             `This might be caused by poor network conditions. ` +
                             `The score is thereafore save on your device, and will be sent when it's possible.` +
                             `Current number of scores actions waiting to be sent: ${$scores.pendingActions()}`
